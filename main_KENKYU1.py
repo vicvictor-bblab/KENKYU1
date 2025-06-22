@@ -9,6 +9,32 @@ import os
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
+# -------------------------------------------------------------------
+# CSV Utilities
+# -------------------------------------------------------------------
+
+def _load_csv(path: str) -> pd.DataFrame:
+    """Read CSV and return cleaned DataFrame for analysis."""
+    df = pd.read_csv(path, header=4)
+
+    # Drop unit row if present
+    if df.shape[0] > 0 and str(df.iloc[0, 0]).startswith("DataUnit"):
+        df = df.drop(index=0).reset_index(drop=True)
+
+    # Remove redundant label column
+    if "DataLabel" in df.columns:
+        df = df.drop(columns=["DataLabel"])
+
+    # Standardize column names
+    rename_map = {
+        "Unnamed: 1": "Time",
+        "FY[1]": "Force.Fy.1",
+        "FZ[2]": "Force.Fz.2",
+    }
+    df = df.rename(columns=rename_map)
+
+    return df
+
 # ===================================================================
 # I. パラメータ定義 (Parameter Definitions)
 # ===================================================================
@@ -141,8 +167,8 @@ class ForceAnalysisApp:
         
         # データ読み込み
         try:
-            # Excelで5行目がヘッダー(DataLabel)なので、skiprows=4 (0-indexed)
-            self.df = pd.read_csv(self.filepath.get(), header=4)
+            # Excelで5行目がヘッダー(DataLabel)
+            self.df = _load_csv(self.filepath.get())
         except Exception as e:
             messagebox.showerror("ファイル読込エラー", f"ファイルの読み込みに失敗しました。\nエラー: {e}")
             return
