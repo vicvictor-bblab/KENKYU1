@@ -27,11 +27,19 @@ def _load_csv(path: str) -> pd.DataFrame:
 
     # Standardize column names
     rename_map = {
-        "Unnamed: 1": "Time",
+        "Unnamed: 1": "Time",  # 時間列
         "FY[1]": "Force.Fy.1",
         "FZ[2]": "Force.Fz.2",
     }
     df = df.rename(columns=rename_map)
+
+    # 数値変換（念のため）
+    df = df.apply(pd.to_numeric, errors='coerce')
+
+    # "Time"列があれば、それを"sec"としてインデックスに設定
+    if "Time" in df.columns:
+        df = df.set_index("Time")
+        df.index.name = "sec"
 
     return df
 
