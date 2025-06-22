@@ -15,7 +15,7 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 SAMPLING_RATE = 1000.0
 FORCE_THRESHOLD_N = 10.0
 BASELINE_PERIOD_S = 1.0
-FOOT_CONTACT_SD_FACTOR = 10.0
+FOOT_CONTACT_SD_FACTOR = 5.0
 
 # ===================================================================
 # II. GUIアプリケーションクラス (GUI Application Class)
