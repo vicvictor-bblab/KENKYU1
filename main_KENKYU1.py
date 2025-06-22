@@ -1,3 +1,6 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
 import tkinter as tk
 from tkinter import ttk, filedialog, messagebox
 import pandas as pd
@@ -113,6 +116,7 @@ class ForceAnalysisApp:
         manage_frame.pack(side=tk.RIGHT, fill=tk.Y)
         ttk.Button(manage_frame, text="この結果をリストに追加", command=self.add_result_to_list).pack(fill=tk.X, padx=5, pady=2)
         ttk.Button(manage_frame, text="全データをExcelに出力", command=self.export_to_excel).pack(fill=tk.X, padx=5, pady=2)
+        ttk.Button(manage_frame, text="終了", command=self.confirm_exit).pack(fill=tk.X, padx=5, pady=2)
         self.saved_count_label = ttk.Label(manage_frame, text="保存済み: 0件")
         self.saved_count_label.pack(pady=5)
 
@@ -349,6 +353,15 @@ class ForceAnalysisApp:
                 messagebox.showinfo("成功", f"全{len(self.results_data)}件のデータを\n{filepath}\nに保存しました。")
             except Exception as e:
                 messagebox.showerror("保存エラー", f"Excelファイルの保存に失敗しました。\nエラー: {e}")
+
+    def confirm_exit(self):
+        """アプリ終了前に確認ダイアログを表示"""
+        ok = messagebox.askyesno(
+            "終了確認",
+            "本当に終了していいですか？\nデータの保存は完了していますか？"
+        )
+        if ok:
+            self.root.destroy()
 
 # ===================================================================
 # III. アプリケーションの実行 (Application Execution)
